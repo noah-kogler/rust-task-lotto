@@ -10,22 +10,48 @@ struct Lotto {
 
 impl Lotto {
     fn new(take: usize, from: usize) -> Self {
-        todo!("Implement")
+        let rng = 1..from;
+        let numbers = rng.choose_multiple(&mut thread_rng(), take);
+
+        Self {
+            take,
+            from,
+            numbers,
+        }
     }
 
+    #[allow(dead_code)]
     fn get_numbers(self) -> Vec<usize> {
-        todo!("Implement")
+        self.numbers
     }
 }
 
 fn format_lotto_results(lotto: &Lotto) -> String {
-    // Tip: Use the format macro
-    todo!("Implement")
+    format!(
+        "{} of {}: [{}]",
+        lotto.take,
+        lotto.from,
+        lotto
+            .numbers
+            .iter()
+            .map(|&n| n.to_string())
+            .collect::<Vec<String>>()
+            .join(", ")
+    )
+}
+
+fn parse_arg(args: &Vec<String>, index: usize) -> usize {
+    args.get(index)
+        .expect("Invalid number of arguments. Pass two numbers!")
+        .parse()
+        .expect("Invalid argument format. Pass two numbers!")
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    todo!("Implement CLI")
+
+    let lotto = Lotto::new(parse_arg(&args, 1), parse_arg(&args, 2));
+    println!("{}", format_lotto_results(&lotto));
 }
 
 #[test]
